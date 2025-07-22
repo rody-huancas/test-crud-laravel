@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Requests\Post\CreatePostRequest;
+use App\Services\Post\PostService;
 
 class PostController extends Controller
 {
+    public function __construct(protected PostService $service) {
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -29,11 +33,7 @@ class PostController extends Controller
      */
     public function store(CreatePostRequest $request)
     {
-        Post::create([
-            "title"   => $request->input("title"),
-            "content" => $request->input("content"),
-            "status"  => $request->input("status")
-        ]);
+        $this->service->create($request->validated());
 
         return redirect()->route("posts.index")->with("message", "Post creado correctamente");
     }
