@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
-use Illuminate\Http\Request;
 use App\Http\Requests\Post\CreatePostRequest;
+use App\Http\Requests\Post\UpdatePostRequest;
+use App\Models\Post;
 use App\Services\Post\PostService;
 
 class PostController extends Controller
 {
-    public function __construct(protected PostService $service) {
-    }
+    public function __construct(protected PostService $service) {}
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $posts = $this->service->getAll();
+
+        return view("post.index", compact("posts"));
     }
 
     /**
@@ -25,7 +26,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view("post.form", ["post" => new Post()]);
     }
 
     /**
@@ -43,23 +44,26 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $post = $this->service->find($id);
+        return view("post.show", compact("post"));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(int $id)
     {
-        //
+        $post = $this->service->find($id);
+        return view("post.form", compact("post"));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdatePostRequest $request, string $id)
     {
-        //
+        $this->service->update($id, $request->validated());
+        return redirect()->route("posts.index")->with("message", "Post actualizado correctamente");
     }
 
     /**
@@ -67,6 +71,7 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $this->service->delete($id);
+        return redirect()->route("posts.index")->with("message", "Post eliminado correctamente");
     }
 }
