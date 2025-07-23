@@ -8,6 +8,4 @@ class Post extends Model
 {
     protected $fillable = ["title", "content", "status"];
     public const PAGINATE = 10;
-
-
 }
