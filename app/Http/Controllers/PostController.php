@@ -6,6 +6,7 @@ use App\Http\Requests\Post\CreatePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Models\Post;
 use App\Services\Post\PostService;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -14,9 +15,9 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = $this->service->getAll();
+        $posts = $this->service->getAll($request->only("status"));
 
         return view("post.index", compact("posts"));
     }

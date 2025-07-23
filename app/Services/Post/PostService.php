@@ -8,9 +8,14 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class PostService
 {
 
-    public function getAll(): LengthAwarePaginator
+    public function getAll(array $filters = []): LengthAwarePaginator
     {
         $query = Post::query();
+
+        if (!empty($filters['status'])) {
+            $query = Post::where('status', $filters['status']);
+        }
+
         return $query->paginate(Post::PAGINATE);
     }
 
